@@ -6,30 +6,30 @@ public class ArraySortingClass {
 	public ArraySortingClass() {
 		
 	}
-    
+	
 	
 	//	Method for randomizing array
 	
-    public void Randomize(int[] _array) {
-    	
-    	var random = new java.util.Random();
-
-    	var tempList = new java.util.LinkedList<Integer>();
-    	
-    	for (int i : _array) {
-    		
-    		tempList.add(i);
-    	}
-    	
-    	int length = _array.length;
-    	
-    	for (int i = 0; i < length; i++) {
-
-    		int randomIndex = random.nextInt(tempList.size());
-    		
-    		_array[i] = tempList.remove(randomIndex);
-    	}
-    }
+	public void Randomize(int[] _array) {
+		
+		var random = new java.util.Random();
+		
+		var tempList = new java.util.LinkedList<Integer>();
+		
+		for (int i : _array) {
+			
+			tempList.add(i);
+		}
+		
+		int length = _array.length;
+		
+		for (int i = 0; i < length; i++) {
+			
+			int randomIndex = random.nextInt(tempList.size());
+			
+			_array[i] = tempList.remove(randomIndex);
+		}
+	}
 	
 	
 	//	Method for swapping two elements in array using indexes
@@ -45,33 +45,33 @@ public class ArraySortingClass {
 	//	Public Method for sorting array using bubbleSort
 	
 	public void bubbleSort(int[] _array) {
-    	
-    	int arrayLength = _array.length;
-    	
-    	for (int indexL = 0; indexL < arrayLength - 1; indexL++) {
-    		
-    		for (int indexR = indexL + 1; indexR < arrayLength; indexR++) {
-    			
-    			//	if left element more than right element, then swap elements
-    			
-        		if (_array[indexL] <= _array[indexR]) {
-        			
-        			continue;
-        		}
-        		
-        		swap(_array, indexL, indexR);
-        	}
-    	}
-    }
+		
+		int arrayLength = _array.length;
+		
+		for (int indexL = 0; indexL < arrayLength - 1; indexL++) {
+			
+			for (int indexR = indexL + 1; indexR < arrayLength; indexR++) {
+				
+				//	if left element more than right element, then swap elements
+				
+				if (_array[indexL] <= _array[indexR]) {
+					
+					continue;
+				}
+				
+				swap(_array, indexL, indexR);
+			}
+		}
+	}
 	
 	
 	//	Public Method for sorting array using selectionSort
 	
 	public void selectionSort(int[] _array) {
 		
-    	int arrayLength = _array.length;
-    	
-    	int minValueIndex;
+		int arrayLength = _array.length;
+		
+		int minValueIndex;
 		
 		for (int indexL = 0; indexL < arrayLength - 1; indexL++) {
 			
@@ -99,36 +99,46 @@ public class ArraySortingClass {
 	}
 	
 	
-	//	Public Method for sorting array using insertionSort
+	//	Helper Method for sorting array using insertion sort by _startIndex and _gap(specific step value)
 	
-	public void insertionSort(int[] _array) {
-    	
+	private void insertionSortWithGap(int[] _array, int _startIndex, int _gap) {
+		
 		//	defining helper variables
 		int arrayLength = _array.length;
 		
 		int i;
 		int j;
 		
-		for (i = 1; i < arrayLength; i++) {
+		//	algorithm works like insertion sort, only using gap as step value and specific start index
+		for (i = _startIndex + _gap; i < arrayLength; i += _gap) {
 			
 			//	getting the value of the current element
 			int currentElement = _array[i];
 			
-			//	going back in array and moving elements 1 unit right until find an element that is less than or equal to currentElement
+			//	going back in array and moving elements _gap unit right until find an element that is less than or equal to currentElement
 			//	or stop iterating at first index if can not find
-			for (j = i; j > 0; j--) {
+			for (j = i; j >= _gap; j -= _gap) {
 				
-				if (_array[j - 1] <= currentElement) {
+				if (_array[j - _gap] <= currentElement) {
 					
 					break;
 				}
 				
-				_array[j] = _array[j - 1];
+				_array[j] = _array[j - _gap];
 			}
 			
 			//	putting currentElement to found index
 			_array[j] = currentElement;
 		}
+	}
+	
+	
+	//	Public Method for sorting array using insertionSort
+	
+	public void insertionSort(int[] _array) {
+		
+		//	calling helper method with values _startIndex = 1 and _gap = 1
+		insertionSortWithGap(_array, 1, 1);
 	}
 	
 	
@@ -179,40 +189,6 @@ public class ArraySortingClass {
 		}
 		
 		shellSortRecursive(_arrayToSort, _gap / 2);
-	}
-	
-	
-	//	shellSort Helper Method for sorting array using insertion sort by _startIndex and _gap(specific step value)
-	
-	private void insertionSortWithGap(int[] _array, int _startIndex, int _gap) {
-		
-		//	defining helper variables
-		int arrayLength = _array.length;
-		
-		int i;
-		int j;
-		
-		//	algorithm works like insertion sort, only using gap as step value and specific start index
-		for (i = _startIndex + _gap; i < arrayLength; i += _gap) {
-			
-			//	getting the value of the current element
-			int currentElement = _array[i];
-			
-			//	going back in array and moving elements 1 unit right until find an element that is less than or equal to currentElement
-			//	or stop iterating at first index if can not find
-			for (j = i; j >= _gap; j -= _gap) {
-				
-				if (_array[j - _gap] <= currentElement) {
-					
-					break;
-				}
-				
-				_array[j] = _array[j - _gap];
-			}
-			
-			//	putting currentElement to found index
-			_array[j] = currentElement;
-		}
 	}
 	
 	
@@ -359,5 +335,107 @@ public class ArraySortingClass {
 		
 		//	returning new pivot indexes by using array
 		return new int[] { newIndexL, newIndexR };
+	}
+	
+	
+	//	Public Method for sorting array using mergeSort
+	
+	public void mergeSort(int[] _array) {
+		
+		mergeSort(_array, 0, _array.length - 1);
+	}
+	
+	
+	//	mergeSort Helper Recursive Method for split array into two parts, and sort them seperately, then merge them finally 
+	
+	private void mergeSort(int[] _array, int _indexL, int _indexR) {
+
+		//	check if size of sub-array is 1, then stop recursive calling
+		if (_indexL >= _indexR)
+		{
+			return;
+		}
+
+		//	find the middle point
+		int indexM = (_indexL + _indexR) / 2;
+		
+		//	sort left and right halves
+		mergeSort(_array, _indexL, indexM);
+		mergeSort(_array, indexM + 1, _indexR);
+		
+		//	merge the sorted halves
+		merge(_array, _indexL, indexM, _indexR);
+	}
+	
+	
+	//	mergeSort Helper Method for merging two sorted array parts by iterate over elements and compare them at each step, finally end up with a single sorted part
+	
+	private void merge(int[] _array, int _indexL, int _indexM, int _indexR) {
+		
+		//	get lengths of left and right parts
+		int lengthL = _indexM - _indexL + 1;
+		int lengthR = _indexR - _indexM;
+		
+		//	define arrays for parts
+		int[] partL = new int[lengthL];
+		int[] partR = new int[lengthR];
+		
+		//	fill the left part
+		for (int i = 0; i < lengthL; i++) {
+
+			partL[i] = _array[i + _indexL];
+		}
+		
+		//	fill the right part
+		for (int i = 0; i < lengthR; i++) {
+
+			partR[i] = _array[i + _indexM + 1];
+		}
+		
+		//	define index holders
+		int indexL = 0;
+		int indexR = 0;
+		int indexCurrent = _indexL;
+		
+		//	iterate over elements and compare left and right at each step
+		//	iteration ends when left or right part reaches to end
+		while (indexL < lengthL && indexR < lengthR) {
+			
+			if (partL[indexL] <= partR[indexR]) {
+				
+				//	left element < right element, so add left element to current index of main array
+				_array[indexCurrent] = partL[indexL];
+				
+				//	increase left index
+				indexL++;
+			}
+			else {
+				
+				//	right element < left element, so add right element to current index of main array
+				_array[indexCurrent] = partR[indexR];
+
+				//	increase right index
+				indexR++;
+			}
+
+			//	increase current index
+			indexCurrent++;
+		}
+		
+		//	add remaining left-part elements to main array (if any)
+		while (indexL < lengthL) {
+			
+			_array[indexCurrent] = partL[indexL];
+			indexL++;
+			indexCurrent++;
+		}
+
+		//	add remaining right-part elements to main array (if any)
+		while (indexR < lengthR) {
+			
+			_array[indexCurrent] = partR[indexR];
+			indexR++;
+			indexCurrent++;
+		}
 	}
 }
